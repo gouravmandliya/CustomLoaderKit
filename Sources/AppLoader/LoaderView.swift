@@ -13,6 +13,9 @@ public struct LoaderView: View {
 
     private let title: String
 
+    @State
+    private var shouldShowLoader = false
+
     // MARK: - Initializer
 
     public init(title: String = "Loading...") {
@@ -25,28 +28,48 @@ public struct LoaderView: View {
 
         ZStack {
 
-            // Background
+            if shouldShowLoader {
 
-            Color.black
-                .opacity(0.35)
-                .ignoresSafeArea()
+                // Native Blur Background
 
-            // Loader Container
+                Rectangle()
+                    .fill(.ultraThinMaterial)
+                    .ignoresSafeArea()
 
-            VStack(spacing: 16) {
+                // Native Loader Container
 
-                ProgressView()
-                    .scaleEffect(1.4)
+                VStack(spacing: 14) {
 
-                Text(title)
-                    .font(.headline)
-                    .foregroundColor(.white)
+                    ProgressView()
+
+                    Text(title)
+                        .font(.subheadline)
+                        .foregroundStyle(.primary)
+                }
+                .padding(.horizontal, 24)
+                .padding(.vertical, 20)
+                .background(.regularMaterial)
+                .clipShape(
+                    RoundedRectangle(
+                        cornerRadius: 18,
+                        style: .continuous
+                    )
+                )
+                .shadow(radius: 8)
+                .transition(.opacity)
             }
-            .padding(24)
-            .background(
-                Color.black.opacity(0.8)
+        }
+        .animation(.easeInOut(duration: 0.2), value: shouldShowLoader)
+
+        // Artificial Delay
+
+        .task {
+
+            try? await Task.sleep(
+                nanoseconds: 500_000_000
             )
-            .cornerRadius(16)
+
+            shouldShowLoader = true
         }
     }
 }
