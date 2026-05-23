@@ -66,7 +66,7 @@ public struct LoaderView: View {
         .task {
 
             try? await Task.sleep(
-                nanoseconds: 500_000_000
+                nanoseconds: 500
             )
 
             shouldShowLoader = true
